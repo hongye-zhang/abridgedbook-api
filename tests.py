@@ -11,7 +11,8 @@ def call_upload_pdf(path):
 
     with open(path, "rb") as f:
         response = requests.post(url, headers=headers, files={"file": f})
-
+    print(response.status_code)
+    print(response.text)
     return response
 
 
