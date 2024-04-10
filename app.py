@@ -24,15 +24,8 @@ def upload_pdf():
 
     if file:
         filename = file.filename
-        file_path = os.path.join(os.getcwd(), filename)
+        #file_path = os.path.join(os.getcwd(), filename)
 
-        # save file to disk
-        file.save(file_path)
-        try:
-            supabase.storage.from_("testbucket").upload(file=file, path="https://supabase.com/dashboard/project/tdklrrxdggwsbfdvtlws/storage/buckets/PDF%20storage",
-                                                    file_options={"content-type": "pdf"})
-        except:
-            b = 0
         return {"filename": filename, "message": "File saved locally."}, 200
 
 
