@@ -16,5 +16,5 @@ def call_upload_pdf(path):
     return response
 
 
-resp = call_upload_pdf('C:/Users/hongy/Documents/Work/Knowledgebase/refine/AW/AW.pdf')
+resp = call_upload_pdf('C:/Users/hongy/Documents/Work/Thinwraps/MainAfter.png')
 print(resp)
