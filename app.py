@@ -30,10 +30,18 @@ def upload_pdf():
         url: str = 'https://tdklrrxdggwsbfdvtlws.supabase.co'
         key: str = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRka2xycnhkZ2d3c2JmZHZ0bHdzIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcwOTc1MzA3MSwiZXhwIjoyMDI1MzI5MDcxfQ.a8mYI-pyEnmHqj7S30uEpOdIyjKhEbGPu62yTq961eE'
         supabase: Client = create_client(url, key)
-        bucket_name: str = "PDF storage"
+        bucket_name: str = "Images"
         contents = file.read()
-        data = supabase.storage.from_(bucket_name).upload('Work/' + file.filename, contents)
-        return {"file url": f"{data.url}", "message": "File saved locally."}, 200
+        path = 'Work/' + file.filename
+        try:
+
+            data = supabase.storage.from_(bucket_name).upload('Work/' + file.filename, contents)
+
+            res = supabase.storage.from_(bucket_name).get_public_url(path)
+        except:
+            res = supabase.storage.from_(bucket_name).get_public_url(path)
+
+        return {"file url": f"{res}", "message": "File saved locally."}, 200
 
 
 @app.route('/')
