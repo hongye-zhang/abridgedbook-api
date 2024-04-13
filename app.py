@@ -7,7 +7,7 @@ import supabase
 app = Flask(__name__)
 
 
-@app.route('/uploadpdf', methods=['POST'])
+@app.route('/upload', methods=['POST'])
 def upload_pdf():
     # check if the post request has the file part
     if 'file' not in request.files:
