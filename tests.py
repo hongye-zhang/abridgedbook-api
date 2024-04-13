@@ -2,12 +2,9 @@ import requests
 
 
 def call_upload_pdf(path):
-    url = "https://abridgedbook-api.onrender.com/upload"  # replace with your Flask app's URL
+    url = "https://upload-portal.onrender.com/upload"  # replace with your Flask app's URL
 
-    # prepare headers for http request
-    headers = {
-        "Content-Type": "application/pdf",
-    }
+
 
     with open(path, "rb") as f:
         response = requests.post(url, files={"file": f})
