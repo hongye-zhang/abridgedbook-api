@@ -19,7 +19,7 @@ def upload_pdf():
     if file.filename == '':
         return {"detail": "No selected file."}, 400
 
-    if not file.filename.endswith(".pdf") or not file.filename.endswith(".png") or not file.filename.endswith(".jpg"):
+    if not file.filename.endswith(".pdf") and not file.filename.endswith(".png") and not file.filename.endswith(".jpg"):
         return {"detail": "Invalid file type. PDF file expected."}, 400
 
     if file:
