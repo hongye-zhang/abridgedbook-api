@@ -33,7 +33,7 @@ def upload_pdf():
         bucket_name: str = "PDF storage"
         contents = file.read()
         data = supabase.storage.from_(bucket_name).upload('Work/' + file.filename, contents)
-        return {"file url": data.url, "message": "File saved locally."}, 200
+        return {"file url": f"{data.url}", "message": "File saved locally."}, 200
 
 
 @app.route('/')
