@@ -1,49 +1,43 @@
 
-from flask import Flask, request
-import shutil
-import os
-import supabase
+from typing import Annotated
 
-app = Flask(__name__)
+from fastapi import FastAPI, File, UploadFile
+from fastapi.responses import HTMLResponse
 
-
-@app.route('/upload', methods=['POST'])
-def upload_pdf():
-    # check if the post request has the file part
-    if 'file' not in request.files:
-        return {"detail": "No file part in request."}, 400
-
-    file = request.files['file']
-
-    # if no file is selected
-    if file.filename == '':
-        return {"detail": "No selected file."}, 400
-
-    if not file.filename.endswith(".pdf") and not file.filename.endswith(".png") and not file.filename.endswith(".jpg"):
-        return {"detail": "Invalid file type. PDF file expected."}, 400
-
-    if file:
-        filename = file.filename
-        #file_path = os.path.join(os.getcwd(), filename)
-        from supabase import create_client, Client
-
-        url: str = 'https://tdklrrxdggwsbfdvtlws.supabase.co'
-        key: str = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRka2xycnhkZ2d3c2JmZHZ0bHdzIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcwOTc1MzA3MSwiZXhwIjoyMDI1MzI5MDcxfQ.a8mYI-pyEnmHqj7S30uEpOdIyjKhEbGPu62yTq961eE'
-        supabase: Client = create_client(url, key)
-        bucket_name: str = "Images"
-        contents = file.read()
-        path = 'Work/' + file.filename
-        try:
-
-            data = supabase.storage.from_(bucket_name).upload('Work/' + file.filename, contents)
-
-            res = supabase.storage.from_(bucket_name).get_public_url(path)
-        except:
-            res = supabase.storage.from_(bucket_name).get_public_url(path)
-
-        return {"file url": f"{res}", "message": "File saved locally."}, 200
+app = FastAPI()
 
 
-@app.route('/')
-def hello_world():
-    return 'Hello, World!'
+@app.post("/files/")
+async def create_files(files: Annotated[list[bytes], File()]):
+    return {"file_sizes": [len(file) for file in files]}
+
+
+@app.post("/uploadfiles/")
+async def create_upload_files(files: list[UploadFile]):
+    import os
+    from supabase import create_client, Client
+
+    url: str = 'https://tdklrrxdggwsbfdvtlws.supabase.co'
+    key: str = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRka2xycnhkZ2d3c2JmZHZ0bHdzIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcwOTc1MzA3MSwiZXhwIjoyMDI1MzI5MDcxfQ.a8mYI-pyEnmHqj7S30uEpOdIyjKhEbGPu62yTq961eE'
+    supabase: Client = create_client(url, key)
+    bucket_name: str = "PDF storage"
+    for f in files:
+        contents = await f.read()
+
+        data = supabase.storage.from_(bucket_name).upload('user/' + f.filename, contents)
+    return {"filenames": [file.filename for file in files]}
+
+
+@app.get("/")
+async def main():
+    content = """
+<body>
+<title>Upload</title>
+<h1>Please upload your file</h1>
+<form action="/uploadfiles/" enctype="multipart/form-data" method="post">
+<input name="files" type="file" multiple>
+<input type="submit">
+</form>
+</body>
+    """
+    return HTMLResponse(content=content)

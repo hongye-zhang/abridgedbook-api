@@ -2,7 +2,7 @@ import requests
 
 
 def call_upload_pdf(path):
-    url = "https://upload-portal.onrender.com/upload"  # replace with your Flask app's URL
+    url = "https://imageurl-h1pu.onrender.com/upload"  # replace with your Flask app's URL
 
 
 
@@ -13,5 +13,5 @@ def call_upload_pdf(path):
     return response
 
 
-resp = call_upload_pdf('C:/Users/hongy/Documents/Work/Thinwraps/MainAfter.png')
+resp = call_upload_pdf("C:/Users/hongy/Documents/Work/Thinwraps/test.png")
 print(resp)
